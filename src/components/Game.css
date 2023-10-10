@@ -1,0 +1,28 @@
+
+body, h1, h2, p {
+  margin: 0;
+  padding: 0;
+}
+
+
+.card {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e0e0e0;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.card.face-up {
+  background-color: #61dafb;
+  color: white;
+}
+
+.card:active {
+  transform: scale(0.98);
+}
+
+  
