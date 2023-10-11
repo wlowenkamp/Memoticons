@@ -1,6 +1,13 @@
 import React from "react";
+import { toast } from "react-toastify";
 
 function Card({ card, onClick }) {
+  const handleCardClick = () => {
+    if (!card.isFaceUp) {
+      onClick(card);
+    }
+  };
+
   const cardStyle = {
     width: "100px",
     height: "100px",
@@ -15,7 +22,7 @@ function Card({ card, onClick }) {
   return (
     <div
       className={`card ${card.isFaceUp ? "bg-warning" : "bg-light"}`}
-      onClick={() => onClick(card)}
+      onClick={handleCardClick}
       style={cardStyle}
     >
       <div className="card-body d-flex align-items-center justify-content-center">
@@ -26,6 +33,7 @@ function Card({ card, onClick }) {
 }
 
 export default Card;
+
 
 
 

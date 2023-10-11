@@ -1,6 +1,5 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-
 import Home from './Home';
 import Game from './Game';
 import Board from './Board';

@@ -34,11 +34,11 @@ export function shuffleArray(array) {
 function Board({ gridSize, handleCardClick, cards }) {
   const cardValues = gridSizeToCardValues[gridSize];
 
-  const numRows = gridSize === "4x4" ? 2 : 3; // Adjust the number of rows based on gridSize
-  const numCols = gridSize === "4x4" ? 2 : 4; // Adjust the number of columns based on gridSize
+  const numRows = gridSize === "4x4" ? 4 : gridSize === "8x4" ? 4 : 6;
+  const numCols = gridSize === "4x4" ? 4 : gridSize === "8x4" ? 8 : 8;
 
   return (
-    <div className="container-fluid mt-4">
+    <div className="container mt-4">
       <div className="row">
         {cards.map((card) => (
           <div key={card.id} className={`col-${12 / numCols} mb-4`}>
@@ -51,6 +51,8 @@ function Board({ gridSize, handleCardClick, cards }) {
 }
 
 export default Board;
+
+
 
 
 

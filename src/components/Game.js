@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
 import Board, { gridSizeToCardValues, generateCards, shuffleArray } from "./Board";
 import { useLocation } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Game() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const gridSize = searchParams.get("grid") || "4x4"; // Default to 4x4 if not specified
+  const gridSize = searchParams.get("grid") || "4x4";
 
   const [cards, setCards] = useState([]);
-  const [selectedCards, setSelectedCards] = useState([]);
-  const [matchedPairs, setMatchedPairs] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
+  const [selectedCard, setSelectedCard] = useState(null);
 
   const initializeGame = (gridSize) => {
     const cardValues = gridSizeToCardValues[gridSize];
@@ -27,39 +28,32 @@ function Game() {
   }, [gridSize]);
 
   const handleCardClick = (clickedCard) => {
-    if (!gameStarted || selectedCards.length >= 2 || clickedCard.isFaceUp) {
+    if (!gameStarted || clickedCard.isFaceUp || selectedCard === clickedCard) {
       return;
     }
 
-    setSelectedCards((prevSelectedCards) => [...prevSelectedCards, clickedCard]);
-
-    const updatedCards = cards.map((card) =>
-      card.id === clickedCard.id ? { ...card, isFaceUp: true } : card
-    );
-
-    setCards(updatedCards);
-
-    if (selectedCards.length === 1) {
-      // Check for a match when the second card is clicked
-      if (selectedCards[0].value === clickedCard.value) {
-        setMatchedPairs(matchedPairs + 1);
-        setSelectedCards([]);
-        // Update the card state to stay uncovered
-        const updatedCards = cards.map((card) =>
-          card.value === clickedCard.value ? { ...card, isFaceUp: true } : card
-        );
-        setCards(updatedCards);
+    if (selectedCard) {
+      if (selectedCard.value === clickedCard.value) {
+        toast.success("Match found!", {
+          position: "top-right",
+          autoClose: 1500,
+        });
       } else {
-        // Delay and then flip back the cards if not a match
+        toast.warning("Not a match! Try again!", {
+          position: "top-right",
+          autoClose: 1500,
+        });
         setTimeout(() => {
-          const updatedCards = cards.map((card) => ({
-            ...card,
-            isFaceUp: false,
-          }));
-          setSelectedCards([]);
-          setCards(updatedCards);
+          selectedCard.isFaceUp = false;
+          clickedCard.isFaceUp = false;
+          setCards([...cards]);
         }, 1000);
       }
+      setSelectedCard(null);
+    } else {
+      clickedCard.isFaceUp = true;
+      setCards([...cards]);
+      setSelectedCard(clickedCard);
     }
   };
 
@@ -73,16 +67,34 @@ function Game() {
           <div className="row justify-content-center">
             <Board gridSize={gridSize} handleCardClick={handleCardClick} cards={cards} />
           </div>
-          {matchedPairs === gridSizeToCardValues[gridSize].length / 2 && (
-            <p className="text-center">Congratulations! You won!</p>
-          )}
         </div>
       ) : null}
+      <ToastContainer />
     </div>
   );
 }
 
 export default Game;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
